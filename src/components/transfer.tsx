@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Background from "../layouts/background";
+import { useState } from "react";
 
 import web3 from "web3";
 import { callExactInputSingle } from "../web3/entryPoint";
@@ -7,6 +8,9 @@ import { callExactInputSingle } from "../web3/entryPoint";
 export default function Transfer() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [transaction, setTransaction] = useState("")
+  const transactionUrl = `https://polygonscan.com/tx/${transaction}`
 
   const onClickBack = () => {
     navigate("/execute");
@@ -20,7 +24,8 @@ export default function Transfer() {
         web3.utils.toWei("0.01", "ether"), // amountIn (0.01 ETH)
         "0", // amountOutMin (minimium amount of output token you want to receive - set to 0 for no minimum)
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", // tokenIn (wMATIC)
-        "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619" // tokenOut (wETH)
+        "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619", // tokenOut (wETH)
+        setTransaction
       );
     } catch (e) {
       console.log(e);
@@ -90,6 +95,12 @@ export default function Transfer() {
             required
           />
         </div>
+        {/* transaction 성공했을 경우 UI */}
+        {transaction && <div className="my-3"> 
+          <p className="break-words mb-2">transaction hash: {transaction}</p>
+          <a className="border p-2" href={transactionUrl}>check transaction</a>
+        </div>}
+        {/* transaction 성공했을 경우 UI */}
         <button
           className="py-4 h-1/6 border-4 rounded-2xl hover:bg-pink-100 border-pink-300"
           onClick={onClickBack}
@@ -100,7 +111,7 @@ export default function Transfer() {
           className="py-8 h-1/6 border-4 rounded-2xl hover:bg-pink-100 border-pink-300"
           onClick={onClickTransfer}
         >
-          <span className="text-2xl">Transfer</span>
+          <span className="text-2xl">Swap</span>
         </button>
       </div>
     </Background>
