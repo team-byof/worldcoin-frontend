@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Background from '../layouts/background'
 
 import {getBalanceOf} from '../web3/connect_aa';
+import { callExactInputSingle } from '../web3/entryPoint';
+import web3 from 'web3';
 
 export default function Transfer() {
   const navigate = useNavigate();
@@ -14,6 +16,13 @@ export default function Transfer() {
 
   const onClickTransfer = () => {
     getBalanceOf(process.env.PUBLIC_KEY || "", "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174")
+    callExactInputSingle(
+      "0xf5b509bb0909a69b1c207e495f687a596c168e12",
+      web3.utils.toWei("0.01", "ether"), // amountIn (0.01 ETH)
+      "0", // amountOutMin (minimium amount of output token you want to receive - set to 0 for no minimum)
+      "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", // tokenIn (wMATIC)
+      "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619", // tokenOut (wETH)
+    )
   }
 
   const getChainName = (chain: string) => {
